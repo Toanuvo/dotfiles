@@ -1,0 +1,47 @@
+Plug 'tpope/vim-surround'
+
+let mapleader = " "
+
+set number
+set relativenumber
+
+map <A-q> <Action>(Run)
+map <A-h> <Action>(PreviousTab)
+map <A-j> <Action>(PreviousTab)
+map <A-l> <Action>(NextTab)
+map <A-k> <Action>(NextTab)
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+nnoremap <C-w>q :action CloseContent<CR>
+
+nnoremap [[ :action MethodUp<CR>
+nnoremap ]] :action MethodDown<CR>
+
+nnoremap <c-=> :action Unsplit<CR>
+nnoremap <c-m> :action MoveEditorToOppositeTabGroup<CR>
+nnoremap <Leader>R :source ~/.ideavimrc<CR>
+nnoremap <Leader><F1> :action ToggleDistractionFreeMode<CR>
+
+noremap <C-p> oSystem.out.println();<Esc>hha
+nnoremap <C-;> A;<Esc>
+nnoremap gb :ls<CR>:b<Space>
+
+inoremap jk <Esc>
+inoremap <C-;> <C-o>$;<Esc>
+inoremap <C-h> <C-o>h
+inoremap <C-l> <C-o>l
+
+
+inoremap <Up> <Nop>
+inoremap <Down> <Nop>
+inoremap <Left> <Nop>
+inoremap <Right> <Nop>
+
+nnoremap <Up> <Nop>
+nnoremap <Down> <Nop>
+nnoremap <Left> <Nop>
+nnoremap <Right> <Nop>
+
