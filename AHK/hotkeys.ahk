@@ -4,15 +4,41 @@ GroupAdd "AltTabWindow", "ahk_class MultitaskingViewFrame"
 CapsLock::Esc
 ScrollLock::CapsLock
 
-srun(s){
-        run s
-        WinWaitNotActive WinExist("A")
-        WinMaximize "A"
+srun(p){
+        if(0 != PID := ProcessExist(p)){
+                WinActivate "ahk_pid " PID
+                return
+        }
+        Run p,,"Max", &PID
+        WinWait "ahk_pid " PID
+        WinActivate "ahk_pid " PID
         WinSetStyle "-0xC00000", "A"
 }
 
-!F1::srun "nvim-qt"
-!F2::srun "vifm"
+!F3::{
+ids := WinGetList(,, "Program Manager")
+             for this_id in ids
+             {
+                     WinActivate this_id
+                             this_class := WinGetClass(this_id)
+                                           this_title := WinGetTitle(this_id)
+                                                         Result := MsgBox(
+                                                                         (
+                                                                          "Visiting All Windows
+                                                                          " A_Index " of " ids.Length "
+                                                                          ahk_id " this_id "
+                                                                          ahk_class " this_class "
+                                                                          " this_title "
+
+                                                                          Continue?"
+                                                                         ),, 4)
+                                                                 if (Result = "No")
+                                                                         break
+             }
+}
+
+!1::srun "nvim-qt.exe"
+!2::srun "vifm.exe"
 
 ^`::WinSetStyle "-0xC00000", "A"
 ;<!Tab::<!^Tab
