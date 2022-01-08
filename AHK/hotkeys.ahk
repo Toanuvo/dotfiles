@@ -39,6 +39,7 @@ ids := WinGetList(,, "Program Manager")
 
 !1::srun "nvim-qt.exe"
 !2::srun "vifm.exe"
+!3::srun "jqt.exe"
 
 ^`::WinSetStyle "-0xC00000", "A"
 ;<!Tab::<!^Tab
