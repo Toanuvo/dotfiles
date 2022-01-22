@@ -6,7 +6,6 @@ export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="robbyrussell"
 
-xmodmap ~/.config/.xmodmap
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
@@ -66,3 +65,5 @@ source $ZSH/oh-my-zsh.sh
 if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
     exec startx
 fi
+
+xmodmap ~/.config/.xmodmap

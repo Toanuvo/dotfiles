@@ -9,7 +9,7 @@
     ~/.config/nvim:
       create: true
       path: nvim
-    ~/.config/vifm/vifmrc:
+    ~/.vifm/vifmrc:
       force: true
       path: vifm/vifmrc_linux
     ~/.config/kitty:
