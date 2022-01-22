@@ -15,6 +15,9 @@
     ~/.config/kitty:
       force: true
       path: kitty
+    ~/.config/.xmodmap:
+      force: true
+      path: xmodmap/.xmodmap
       
 
 - shell:
