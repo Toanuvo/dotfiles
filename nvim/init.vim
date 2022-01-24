@@ -129,6 +129,7 @@ tnoremap <C-l> <C-\><C-n><C-w>l
 inoremap jk <Esc>
 inoremap <C-H> <C-o>h
 inoremap <C-l> <C-o>l
+inoremap <C-e> <Esc>A;<Esc>
 inoremap , ,<c-g>u
 inoremap . .<c-g>u
 
