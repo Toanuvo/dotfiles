@@ -1,8 +1,10 @@
 #SingleInstance Force
 GroupAdd "AltTabWindow", "ahk_class MultitaskingViewFrame"
 
+#HotIf !WinExist("ahk_exe VirtualBoxVM.exe")
 CapsLock::Esc
 ScrollLock::CapsLock
+#HotIf
 
 srun(p){
         if(0 != PID := ProcessExist(p)){
