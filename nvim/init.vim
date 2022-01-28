@@ -39,7 +39,7 @@ call plug#end()
 
 let mapleader = " "
 
-syntax on
+"syntax on
 
 colorscheme dracula
 
@@ -80,7 +80,7 @@ au FileType j set tabstop=2
 
 au FileType c nnoremap <buffer> <Leader>r <Esc>:w<CR>:make clean<CR>:make run<CR>
 au FileType python nnoremap <buffer> <Leader>r <Esc>:w<CR>:!python %<CR>
-au FileType rust nnoremap <buffer> <Leader>r <Esc>:w<CR>:RustRun<CR>
+au FileType rust nnoremap <buffer> <Leader>r <Esc>:w<CR>:!cargo run<CR>
 au FileType autohotkey nnoremap <buffer> <Leader>r :w<CR>:call jobstart(expandcmd('%:p'))<CR>
 
 " startify stuff
@@ -154,6 +154,9 @@ require('nvim-autopairs').setup{}
 
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
+
+local opts = { noremap=true }
+vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
 
 END
 

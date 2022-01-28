@@ -1,6 +1,0 @@
-ln -sfr i3/ ~/.config/
-ln -sfr kitty/ ~/.config/
-ln -sfr nvim/ ~/.config/
-ln -sfr zsh/.zshrc ~
-ln -sfr vifm/vifmrc_linux ~/.config/vifm/vifmrc
-

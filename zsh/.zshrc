@@ -57,6 +57,8 @@ source $ZSH/oh-my-zsh.sh
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
+alias gs='git status'
+
  if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
  else
@@ -64,5 +66,7 @@ source $ZSH/oh-my-zsh.sh
  fi
 if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
     exec startx
+else
+    [[ -t 0 && $(tty) == /dev/tty1 && ! $DISPLAY ]] && exec startx
 fi
 
