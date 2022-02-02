@@ -55,7 +55,8 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 alias gs='git status'
 
@@ -64,9 +65,11 @@ alias gs='git status'
  else
    export EDITOR='nvim'
  fi
+
 if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
     exec startx
 else
     [[ -t 0 && $(tty) == /dev/tty1 && ! $DISPLAY ]] && exec startx
 fi
+
 
