@@ -11,6 +11,7 @@ srun(p){
                 WinActivate "ahk_pid " PID
                 return
         }
+
         Run p,,"Max", &PID
         WinWait "ahk_pid " PID
         WinActivate "ahk_pid " PID
@@ -43,6 +44,7 @@ ids := WinGetList(,, "Program Manager")
 !1::srun "nvim-qt.exe"
 !2::srun "vifm.exe"
 !3::srun "jqt.exe"
+!4::srun "alacritty.exe"
 #HotIf
 
 ^`::WinSetStyle "-0xC00000", "A"
