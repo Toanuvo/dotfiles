@@ -13,6 +13,7 @@ srun(p){
         }
 
         Run p,,"Max", &PID
+        sleep 200
         WinWait "ahk_pid " PID
         WinActivate "ahk_pid " PID
         WinSetStyle "-0xC00000", "A"

@@ -5,6 +5,8 @@ if OS == 'Linux'
 else 
 	let plugpath = '~\AppData\Local\nvim\plugged'
     let g:python3_host_prog = '$PYTHON_PATH'
+    
+    "lua vim.o.shell = "\"C:/Program Files/PowerShell/7-preview/pwsh.exe\"" 
 endif
 
 call plug#begin(plugpath)
@@ -78,10 +80,10 @@ au FileType netrw nmap <buffer> <C-l> <C-w>l
 
 au FileType j set tabstop=2
 
-au FileType c nnoremap <buffer> <Leader>r <Esc>:w<CR>:make clean<CR>:make run<CR>
-au FileType python nnoremap <buffer> <Leader>r <Esc>:w<CR>:!python %<CR>
-au FileType rust nnoremap <buffer> <Leader>r <Esc>:w<CR>:!cargo run<CR>
-au FileType autohotkey nnoremap <buffer> <Leader>r :w<CR>:call jobstart(expandcmd('%:p'))<CR>
+au FileType c           nnoremap <buffer> <Leader>r <Esc>:w<CR>:make clean<CR>:make run<CR>
+au FileType python      nnoremap <buffer> <Leader>r <Esc>:w<CR>:!python %<CR>
+au FileType rust        nnoremap <buffer> <Leader>r <Esc>:w<CR>:!cargo run<CR>
+au FileType autohotkey  nnoremap <buffer> <Leader>r :w<CR>:call jobstart(expandcmd('%:p'))<CR>
 
 " startify stuff
 let g:startify_lists = [
@@ -107,7 +109,7 @@ nnoremap <Leader>R :w<CR>:source %<CR>
 nnoremap <Leader>s :w<CR>
 nnoremap <Leader>w :qa<CR>
 nnoremap <Leader>v :vs 
-nnoremap <Leader>t :term<CR>
+nnoremap <Leader>t <C-w>v:term<CR>
 
 nnoremap n nzz
 nnoremap N Nzz
@@ -118,13 +120,15 @@ nnoremap gb :ls<CR>:b<Space>
 nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
 nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
 
+
+autocmd BufWinEnter,WinEnter term://* startinsert
 tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
 tnoremap jk <C-\><C-n>
 tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
-
+tnoremap <Esc> <C-\><C-n>
 
 inoremap jk <Esc>
 inoremap <C-H> <C-o>h
