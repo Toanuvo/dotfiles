@@ -1,0 +1,39 @@
+{
+    "command": {
+        "activate": "Alt+J",
+        "deactivate": ";",
+        "move-left": "H",
+        "move-down": "J",
+        "move-up": "K",
+        "move-right": "L",
+        "sniper-mode": "Shift",
+        "sniper-mode-wheel": "Shift",
+        "wheel-up": "R",
+        "wheel-down": "T",
+        "wheel-left": "Q",
+        "wheel-right": "E",
+        "click-left": "F",
+        "click-middle": "Shift+D",
+        "click-right": "D",
+        "teleport-forward": "G",
+        "teleport-down": "J - J",
+        "teleport-left": "H - H",
+        "teleport-right": "L - L",
+        "teleport-up": "K - K",
+        "attach-down": "Space+J",
+        "attach-left": "Space+H",
+        "attach-right": "Space+L",
+        "attach-up": "Space+K"
+    },
+    "data": {
+        "cursor-sniper-speed": 2,
+        "cursor-acceleration": 0.7,
+        "cursor-max-speed": 15,
+        "key-timeout": 150,
+        "show-overlay": true,
+        "teleport-distance": 200,
+        "wheel-acceleration": 4,
+        "wheel-sniper-speed": 8,
+        "wheel-max-speed": 40
+    }
+}

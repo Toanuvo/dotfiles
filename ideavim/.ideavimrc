@@ -24,6 +24,7 @@ nnoremap <c-=> :action Unsplit<CR>
 nnoremap <c-m> :action MoveEditorToOppositeTabGroup<CR>
 nnoremap <Leader>R :source ~/.ideavimrc<CR>
 nnoremap <Leader><F1> :action ToggleDistractionFreeMode<CR>
+nnoremap <Leader>h :action ShowErrorDescription<CR>
 
 noremap <C-p> oSystem.out.println();<Esc>hha
 nnoremap <C-;> A;<Esc>
