@@ -159,9 +159,10 @@ require('nvim-autopairs').setup{}
 
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
+lspconfig.hls.setup {}
 
 local opts = { noremap=true }
-vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>', opts)
 
 END
 
@@ -225,6 +226,7 @@ ensure_installed = {
     "java",
     "cpp",
     "vim",
+    "haskell",
     "lua"
 },
 
