@@ -49,6 +49,8 @@ ids := WinGetList(,, "Program Manager")
 #HotIf
 
 ^`::WinSetStyle "-0xC00000", "A"
+!BS::WinClose "A"
+
 ;<!Tab::<!^Tab
 
 #HotIf WinExist("ahk_group AltTabWindow")  ; Indicates that the alt-tab menu is present on the screen.

@@ -26,7 +26,6 @@ Plug 'christoomey/vim-tmux-navigator'
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'simrat39/rust-tools.nvim'
-
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -111,6 +110,8 @@ nnoremap <Leader>s :w<CR>
 nnoremap <Leader>w :qa<CR>
 nnoremap <Leader>v :vs 
 nnoremap <Leader>t <C-w>v:term<CR>
+nnoremap <Leader>o :Startify<CR>
+
 
 nnoremap n nzz
 nnoremap N Nzz
@@ -160,6 +161,7 @@ require('nvim-autopairs').setup{}
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
 lspconfig.hls.setup {}
+lspconfig.pyright.setup {}
 
 local opts = { noremap=true }
 vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>', opts)
