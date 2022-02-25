@@ -160,14 +160,8 @@ require('nvim-autopairs').setup{}
 
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
-<<<<<<< HEAD
-lspconfig.hls.setup {
-    command = "hls"
-    }
-=======
-lspconfig.hls.setup {}
+lspconfig.hls.setup { command = "hls" }
 lspconfig.pyright.setup {}
->>>>>>> 9dac3bffb702ff1dc519ba449fe1535d71217869
 
 local opts = { noremap=true }
 vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>', opts)
