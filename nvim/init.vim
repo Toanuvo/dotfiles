@@ -24,6 +24,7 @@ Plug 'christoomey/vim-tmux-navigator'
 "  Plug 'vim-airline/vim-airline'
 "  Plug 'kyazdani42/nvim-web-devicons'
 
+Plug 'tpope/vim-fugitive'
 Plug 'neovim/nvim-lspconfig'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'hrsh7th/nvim-cmp'
