@@ -59,6 +59,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 alias gs='git status'
+alias gu='git pull'
 
  if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
@@ -66,10 +67,11 @@ alias gs='git status'
    export EDITOR='nvim'
  fi
 
-if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
-    exec startx
-else
-    [[ -t 0 && $(tty) == /dev/tty1 && ! $DISPLAY ]] && exec startx
-fi
+
+#if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
+#    exec startx
+#elif [[ -t 0 && $(tty) == /dev/tty1 && ! $DISPLAY ]]; then
+#    exec startx
+#fi
 
 

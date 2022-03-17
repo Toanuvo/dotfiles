@@ -166,6 +166,8 @@ lspconfig.pyright.setup {}
 
 local opts = { noremap=true }
 vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<Leader>d', ':lua vim.lsp.buf.hover()<CR>', opts)
+
 
 END
 
