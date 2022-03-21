@@ -60,6 +60,11 @@ export LC_ALL=en_US.UTF-8
 
 alias gs='git status'
 alias gu='git pull'
+alias ta='tmux a -t'
+
+setopt globdots
+zstyle ':completion:*' matcher-list  'm:{a-zA-Z}={A-Za-z}' 'r:|=*' '+l:|=* r:|=*'
+
 
  if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
@@ -75,3 +80,5 @@ alias gu='git pull'
 #fi
 
 
+
+[ -f "/home/kz/.ghcup/env" ] && source "/home/kz/.ghcup/env" # ghcup-env

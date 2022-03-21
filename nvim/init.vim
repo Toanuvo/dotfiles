@@ -161,7 +161,7 @@ require('nvim-autopairs').setup{}
 
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
-lspconfig.hls.setup { command = "hls" }
+lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-j 1"}}
 lspconfig.pyright.setup {}
 
 local opts = { noremap=true }
