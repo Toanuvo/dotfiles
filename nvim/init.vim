@@ -156,13 +156,24 @@ function! Scratch()
 endfunction
 
 lua <<END
-require('rust-tools').setup({})
 require('nvim-autopairs').setup{}
+require('rust-tools').setup{}
 
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
 lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-j 1"}}
 lspconfig.pyright.setup {}
+
+--lspconfig.rust_analyzer.setup {
+    --tools = {
+        --autoSetHints = true,
+        --inlay_hints = {
+            --show_parameter_hints = true,
+            --parameter_hints_prefix = "",
+            --other_hints_prefix = "",
+            --}
+        --}
+    --}
 
 local opts = { noremap=true }
 vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>', opts)
