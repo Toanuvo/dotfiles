@@ -25,6 +25,7 @@ Plug 'christoomey/vim-tmux-navigator'
 "  Plug 'kyazdani42/nvim-web-devicons'
 
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
 Plug 'neovim/nvim-lspconfig'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'hrsh7th/nvim-cmp'
