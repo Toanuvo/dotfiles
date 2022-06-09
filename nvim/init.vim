@@ -24,6 +24,8 @@ Plug 'christoomey/vim-tmux-navigator'
 "  Plug 'vim-airline/vim-airline'
 "  Plug 'kyazdani42/nvim-web-devicons'
 
+Plug 'scalameta/nvim-metals'
+Plug 'nvim-lua/plenary.nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'neovim/nvim-lspconfig'
@@ -34,6 +36,7 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'SirVer/ultisnips'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+Plug 'honza/vim-snippets'
 
 Plug 'mfussenegger/nvim-dap'
 "  Plug 'glepnir/lspsaga.nvim'
@@ -100,6 +103,7 @@ let g:startify_commands = ['term']
 let g:startify_custom_header = ''
 let g:startify_session_persistence = 1
 
+let g:UltiSnipsExpandTrigger="<tab>"
 
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -160,10 +164,18 @@ lua <<END
 require('nvim-autopairs').setup{}
 require('rust-tools').setup{}
 
+--metals
+vim.opt_global.shortmess:remove("F"):append("c")
+local metals_config = require("metals").bare_config()
+metals_config.settings = {
+    serverVersion = "latest.snapshot"
+    }
+
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
 lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-j 1"}}
 lspconfig.pyright.setup {}
+lspconfig.elmls.setup {}
 
 --lspconfig.rust_analyzer.setup {
     --tools = {
@@ -181,9 +193,6 @@ vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>'
 vim.api.nvim_set_keymap('n', '<Leader>d', ':lua vim.lsp.buf.hover()<CR>', opts)
 
 
-END
-
-lua << END
 local cmp = require'cmp'
 
 cmp.setup({
@@ -227,7 +236,20 @@ cmp.setup({
 
 --cmp.setup.cmdline(':', { sources = cmp.config.sources({ {name = 'path'}, {name = 'cmdline'} }) })
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+metals_config.capabilities = capabilities
 --require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
+
+
+
+-- Autocmd that will actually be in charging of starting the whole thing
+local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "scala", "sbt"},
+    callback = function()
+        require("metals").initialize_or_attach(metals_config)
+    end,
+    group = nvim_metals_group,
+  })
 END
 
 lua <<EOF
@@ -244,7 +266,9 @@ ensure_installed = {
     "cpp",
     "vim",
     "haskell",
-    "lua"
+    "lua",
+    "elm",
+    "scala"
 },
 
 -- Install languages synchronously (only applied to `ensure_installed`)
