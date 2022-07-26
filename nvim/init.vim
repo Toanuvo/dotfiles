@@ -9,6 +9,10 @@ else
     "lua vim.o.shell = "\"C:/Program Files/PowerShell/7-preview/pwsh.exe\"" 
 endif
 
+lua <<END
+require('init')
+END
+
 call plug#begin(plugpath)
 Plug 'dracula/vim'
 Plug 'ryanoasis/vim-devicons'
@@ -24,12 +28,10 @@ Plug 'christoomey/vim-tmux-navigator'
 "  Plug 'vim-airline/vim-airline'
 "  Plug 'kyazdani42/nvim-web-devicons'
 
-Plug 'scalameta/nvim-metals'
-Plug 'nvim-lua/plenary.nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'neovim/nvim-lspconfig'
-Plug 'simrat39/rust-tools.nvim'
+"Plug 'simrat39/rust-tools.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -50,23 +52,23 @@ let mapleader = " "
 
 colorscheme dracula
 
-set mouse=a
-set splitright
-set splitbelow
-set noshowmode
-set wildmenu
-set wildignorecase
-set showcmd
+"set mouse=a
+"set splitright
+"set splitbelow
+"set wildmenu
+"set wildignorecase
+"set showcmd
 "set path+=**
-set clipboard+=unnamedplus
-set number
-set relativenumber
-set guifont=RobotoMono\ NF:h13
+"set clipboard+=unnamedplus
+"set number
+"set relativenumber
+"set guifont=RobotoMono\ NF:h13
 "set guifont=Segoe\ UI:h13
-set expandtab
-set autoindent
-set tabstop=4
-set shiftwidth=0
+"set expandtab
+"set autoindent
+"set tabstop=4
+"set shiftwidth=0
+"set autochdir
 
 filetype on
 filetype plugin on
@@ -75,7 +77,6 @@ filetype indent on
 let g:netrw_browse_split = 4
 let g:netrw_winsize = -25
 let g:netrw_banner = 0
-set autochdir
 au FileType netrw nmap <buffer> h -
 au FileType netrw nmap <buffer> l <CR>
 au FileType netrw nmap <buffer> <C-h> <C-w>h
@@ -161,32 +162,31 @@ function! Scratch()
 endfunction
 
 lua <<END
-require('nvim-autopairs').setup{}
-require('rust-tools').setup{}
 
---metals
-vim.opt_global.shortmess:remove("F"):append("c")
-local metals_config = require("metals").bare_config()
-metals_config.settings = {
-    serverVersion = "latest.snapshot"
+local rust_opts = { 
+    tools = {
+        autoSetHints = true,
+        inlayHints = {
+            parameterHints = true,
+            typeHints = {
+                enable = true
+                }, 
+            parameter_hints_prefix = "",
+            other_hints_prefix = "",
+            }
+        }
     }
+
+require('nvim-autopairs').setup{}
+--require('rust-tools').setup{rust_opts}
+
 
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
-lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-j 1"}}
+lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-l hls.log", "-j 1"}}
 lspconfig.pyright.setup {}
 lspconfig.elmls.setup {}
-
---lspconfig.rust_analyzer.setup {
-    --tools = {
-        --autoSetHints = true,
-        --inlay_hints = {
-            --show_parameter_hints = true,
-            --parameter_hints_prefix = "",
-            --other_hints_prefix = "",
-            --}
-        --}
-    --}
+lspconfig.rust_analyzer.setup {}
 
 local opts = { noremap=true }
 vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>', opts)
@@ -236,20 +236,10 @@ cmp.setup({
 
 --cmp.setup.cmdline(':', { sources = cmp.config.sources({ {name = 'path'}, {name = 'cmdline'} }) })
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-metals_config.capabilities = capabilities
 --require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
 
 
 
--- Autocmd that will actually be in charging of starting the whole thing
-local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "scala", "sbt"},
-    callback = function()
-        require("metals").initialize_or_attach(metals_config)
-    end,
-    group = nvim_metals_group,
-  })
 END
 
 lua <<EOF
