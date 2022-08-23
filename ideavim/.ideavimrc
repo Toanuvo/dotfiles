@@ -5,16 +5,13 @@ let mapleader = " "
 set number
 set relativenumber
 
-map <A-q> <Action>(Run)
-map <A-h> <Action>(PreviousTab)
-map <A-j> <Action>(PreviousTab)
-map <A-l> <Action>(NextTab)
-map <A-k> <Action>(NextTab)
+map <Leader>r <Action>(Run)
+map <Leader>d <Action>(Debug)
 
 nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+nnoremap <C-j> :action PreviousTab<CR>
+nnoremap <C-k> :action NextTab<CR>
 nnoremap <C-w>q :action CloseContent<CR>
 
 nnoremap [[ :action MethodUp<CR>
@@ -24,7 +21,9 @@ nnoremap <c-=> :action Unsplit<CR>
 nnoremap <c-m> :action MoveEditorToOppositeTabGroup<CR>
 nnoremap <Leader>R :source ~/.ideavimrc<CR>
 nnoremap <Leader><F1> :action ToggleDistractionFreeMode<CR>
-nnoremap <Leader>h :action ShowErrorDescription<CR>
+nnoremap <Leader>e :action ShowErrorDescription<CR>
+nnoremap <Leader>o :action ShowSettings<CR>
+nnoremap <Leader>h :action QuickJavaDoc<CR>
 
 noremap <C-p> oSystem.out.println();<Esc>hha
 nnoremap <C-;> A;<Esc>
