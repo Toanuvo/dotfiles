@@ -71,6 +71,7 @@ setopt HISTfindnodups
 alias gs='git status'
 alias gu='git pull'
 alias ta='tmux a -t'
+alias n='nvim'
 
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' '+r:|[._-]=* r:|=*' '+l:|=*'  
 #:completion:* 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'  
