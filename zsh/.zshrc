@@ -73,14 +73,48 @@ alias gu='git pull'
 alias ta='tmux a -t'
 alias n='nvim'
 
+PKG_DEB="sudo apt update && sudo apt install "
+PKG_ARCH="sudo pacman -Sy "
+PKG_ALP="apk update && apk add "
+
+# /etc/os-release is the newer standard w/ systemd, look for that first
+if [[ -f "/etc/os-release" ]] then
+	DISTRO=$(cat /etc/os-release | head -n 1 | cut -d "=" -f 2 | tr '[:upper:]' '[:lower:]' | tr -d '\"')
+# hostnamectl is still newer, but a nice fallback and exists on some systems not running systemd (ex: Ubuntu 14.04)
+elif [[ -x "$( command -v hostnamectl )" ]] then
+	DISTRO=$(hostnamectl | grep "Operating System" | cut -d ":" -f 2 | sed -e 's/^[[:space:]]*//' | tr '[:upper:]' '[:lower:]')
+fi
+
+if [[ ${DISTRO} == *"arch"* ]] then
+    alias get=$PKG_ARCH
+elif [[ ${DISTRO} == *"manjaro"* ]] then
+    alias get=$PKG_DEB
+elif [[ ${DISTRO} == *"centos"* ]] then
+    alias get=$PKG_DEB
+elif [[ ${DISTRO} == *"fedora"* ]] then
+    alias get=$PKG_DEB
+elif [[ ${DISTRO} == *"rhel"* ]] then
+    alias get=$PKG_DEB
+elif [[ ${DISTRO} == *"debian"* ]] then
+    alias get=$PKG_DEB
+elif [[ ${DISTRO} == *"ubuntu"* ]] then
+    alias get=$PKG_DEB
+elif [[ ${DISTRO} == *"mint"* ]] then
+    alias get=$PKG_DEB
+elif [[ ${DISTRO} == *"artix"* ]] then
+    alias get=$PKG_ARCH
+elif [[ ${DISTRO} == *"alpine"* ]] then
+    alias get=$PKG_ALP
+fi
+
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' '+r:|[._-]=* r:|=*' '+l:|=*'  
 #:completion:* 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'  
 
-if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
-    exec startx
-elif [[ -t 0 && $(tty) == /dev/tty1 &&  $DISPLAY ]]; then
-	exec startx
-fi
+#if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
+    #exec startx
+#elif [[ -t 0 && $(tty) == /dev/tty1 &&  $DISPLAY ]]; then
+	#exec startx
+#fi
 
 
 [ -f "/home/kz/.ghcup/env" ] && source "/home/kz/.ghcup/env" # ghcup-env

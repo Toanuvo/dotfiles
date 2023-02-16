@@ -29,9 +29,10 @@ Plug 'christoomey/vim-tmux-navigator'
 "  Plug 'kyazdani42/nvim-web-devicons'
 
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
+"Plug 'tpope/vim-surround'
+Plug 'kylechui/nvim-surround'
 Plug 'neovim/nvim-lspconfig'
-"Plug 'simrat39/rust-tools.nvim'
+Plug 'simrat39/rust-tools.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -39,6 +40,8 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'SirVer/ultisnips'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'nvim-lua/lsp-status.nvim'
 
 Plug 'mfussenegger/nvim-dap'
 "  Plug 'glepnir/lspsaga.nvim'
@@ -85,6 +88,7 @@ au FileType netrw nmap <buffer> <C-k> <C-w>k
 au FileType netrw nmap <buffer> <C-l> <C-w>l
 
 au FileType j set tabstop=2
+au FileType racket set tabstop=2
 
 au FileType c           nnoremap <buffer> <Leader>r <Esc>:w<CR>:make clean<CR>:make run<CR>
 au FileType python      nnoremap <buffer> <Leader>r <Esc>:w<CR>:!python %<CR>
@@ -111,6 +115,10 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <C-c> :cd %:p:h<CR>
+nnoremap <C-u> <C-u>zz
+nnoremap <C-d> <C-d>zz
+nnoremap <C-f> <C-f>zz
+nnoremap <C-b> <C-b>zz
 
 nnoremap <Leader>R :w<CR>:source %<CR>
 nnoremap <Leader>s :w<CR>
@@ -147,6 +155,8 @@ inoremap , ,<c-g>u
 inoremap . .<c-g>u
 
 
+"autocmd CursorMoved,InsertLeave,TabEnter,BufWritePost * :lua require'lsp_extensions'.inlay_hints{ prefix = '=>', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"} }
+
 vnoremap q <Esc>:q<CR>
 vnoremap <Leader>w <Esc>:q<CR>
 
@@ -178,7 +188,7 @@ local rust_opts = {
     }
 
 require('nvim-autopairs').setup{}
---require('rust-tools').setup{rust_opts}
+require('rust-tools').setup{rust_opts}
 
 
 local lspconfig = require'lspconfig'
@@ -186,7 +196,10 @@ lspconfig.ccls.setup {}
 lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-l hls.log", "-j 1"}}
 lspconfig.pyright.setup {}
 lspconfig.elmls.setup {}
-lspconfig.rust_analyzer.setup {}
+lspconfig.zls.setup {}
+lspconfig.racket_langserver.setup{cmd = {"xvfb-run", "racket", "--lib", "racket-langserver"}}
+
+--lspconfig.rust_analyzer.setup {}
 
 local opts = { noremap=true }
 vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>', opts)
@@ -235,7 +248,7 @@ cmp.setup({
 })
 
 --cmp.setup.cmdline(':', { sources = cmp.config.sources({ {name = 'path'}, {name = 'cmdline'} }) })
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 --require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
 
 
@@ -258,7 +271,9 @@ ensure_installed = {
     "haskell",
     "lua",
     "elm",
-    "scala"
+    "scala",
+    "zig",
+    "racket"
 },
 
 -- Install languages synchronously (only applied to `ensure_installed`)
@@ -280,4 +295,5 @@ highlight = {
     additional_vim_regex_highlighting = false,
     }
 }
+require("nvim-surround").setup({})
 EOF
