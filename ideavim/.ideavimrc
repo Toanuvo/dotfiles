@@ -21,12 +21,19 @@ nnoremap <c-=> :action Unsplit<CR>
 nnoremap <c-m> :action MoveEditorToOppositeTabGroup<CR>
 nnoremap <Leader>R :source ~/.ideavimrc<CR>
 nnoremap <Leader><F1> :action ToggleDistractionFreeMode<CR>
+nnoremap <Leader>hd :action QuickJavaDoc<CR>
 nnoremap <Leader>e :action ShowErrorDescription<CR>
 nnoremap <Leader>o :action ShowSettings<CR>
-nnoremap <Leader>h :action QuickJavaDoc<CR>
+nnoremap <Leader>hd :action QuickJavaDoc<CR>
+nnoremap <Leader>hi :action ShowIntentionActions<CR>
+nnoremap <Leader>H :action ShowPopupMenu<CR>
+nnoremap <Leader>gc :action ActivateCommitToolWindow<CR>
 
 noremap <C-p> oSystem.out.println();<Esc>hha
 nnoremap <C-;> A;<Esc>
+nnoremap gs :action GotoSuperMethod<CR>
+nnoremap gD :action GotoImplementation<CR>
+nnoremap zf :action CollapseSelection<CR>
 nnoremap gb :ls<CR>:b<Space>
 
 inoremap jk <Esc>
