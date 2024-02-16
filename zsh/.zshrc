@@ -3,6 +3,7 @@
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export CC=gcc
 
 ZSH_THEME="robbyrussell"
 
