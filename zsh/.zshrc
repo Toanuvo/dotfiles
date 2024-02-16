@@ -54,8 +54,12 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
+export PATH="$PATH:/home/kz/.local/bin"
+export PATH="$PATH:/home/kz/.cargo/bin"
 export PATH="$PATH:/home/kz/.local/share/coursier/bin"
+export PATH=$PATH:/usr/local/go/bin
 export EDITOR='nvim'
+export ZIG_PREFIX='/home/kz/programming/zig'
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
@@ -118,3 +122,4 @@ zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' '+r:|[._-]=* r:|
 
 
 [ -f "/home/kz/.ghcup/env" ] && source "/home/kz/.ghcup/env" # ghcup-env
+eval "$(zoxide init zsh)"

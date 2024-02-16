@@ -21,6 +21,7 @@ Plug 'mhinz/vim-startify'
 Plug 'windwp/nvim-autopairs'
 Plug 'sbulav/nredir.nvim'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'bakpakin/janet.vim'
 " Plug 'roxma/nvim-yarp'
 " Plug 'roxma/vim-hug-neovim-rpc'
 "  Plug 'scrooloose/nerdtree'
@@ -42,10 +43,12 @@ Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'nvim-lua/lsp-status.nvim'
+"Plug 'unisonweb/unison', { 'branch': 'trunk', 'rtp': 'editor-support/vim' }
 
 Plug 'mfussenegger/nvim-dap'
 "  Plug 'glepnir/lspsaga.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
 "  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 call plug#end()
 
@@ -95,6 +98,8 @@ au FileType python      nnoremap <buffer> <Leader>r <Esc>:w<CR>:!python %<CR>
 au FileType rust        nnoremap <buffer> <Leader>r <Esc>:w<CR>:!cargo run<CR>
 au FileType autohotkey  nnoremap <buffer> <Leader>r :w<CR>:call jobstart(expandcmd('%:p'))<CR>
 
+au FileType zig         nnoremap <buffer> <Leader>p <Esc>ostd.debug.print("{any}\n", .{});<C-o>2h
+
 " startify stuff
 let g:startify_lists = [
   \ { 'type': 'commands',  'header': ['   Commands']       },
@@ -126,6 +131,8 @@ nnoremap <Leader>w :qa<CR>
 nnoremap <Leader>v :vs 
 nnoremap <Leader>t <C-w>v:term<CR>
 nnoremap <Leader>o :Startify<CR>
+nnoremap <Leader>e :e<CR>
+nnoremap <Leader>l iλ
 
 
 nnoremap n nzz
@@ -190,20 +197,28 @@ local rust_opts = {
 require('nvim-autopairs').setup{}
 require('rust-tools').setup{rust_opts}
 
-
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
 lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-l hls.log", "-j 1"}}
 lspconfig.pyright.setup {}
 lspconfig.elmls.setup {}
-lspconfig.zls.setup {}
-lspconfig.racket_langserver.setup{cmd = {"xvfb-run", "racket", "--lib", "racket-langserver"}}
+lspconfig.zls.setup {cmd = {"zls", "--enable-debug-log"}}
+--lspconfig.unison.setup{filetypes = {"unison", "u"}}
+lspconfig.gopls.setup{cmd = {"/home/kz/go/bin/gopls"}}
+lspconfig.elixirls.setup{cmd = {"/home/kz/programming/elixir/bin/lsp/language_server.sh"}}
+--lspconfig.racket_langserver.setup{cmd = {"xvfb-run", "racket", "--lib", "racket-langserver"}}
+lspconfig.racket_langserver.setup{}
 
 --lspconfig.rust_analyzer.setup {}
+
 
 local opts = { noremap=true }
 vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>', opts)
 vim.api.nvim_set_keymap('n', '<Leader>d', ':lua vim.lsp.buf.hover()<CR>', opts)
+
+vim.filetype.add({extension = {
+    pony = 'pony'
+    }})
 
 
 local cmp = require'cmp'
@@ -256,6 +271,23 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protoc
 END
 
 lua <<EOF
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+parser_config.pony = {
+    install_info = {
+        url = "~/programming/pony/tree-sitter-ponylang", -- local path or git repo
+        files = {"src/parser.c", "src/scanner.c"}, -- note that some parsers also require src/scanner.c or src/scanner.cc
+        -- optional entries:
+        branch = "main", -- default branch in case of git repo if different from master
+        generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+        requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+    },
+    filetype = "pony", -- if filetype does not match the parser name
+}
+
+--require("vim.treesitter.query").set("pony", "injections", "(method name: (identifier) @function)")
+
+
+--require'nvim-treesitter.install'.compilers = {"zig c++"}
 require'nvim-treesitter.configs'.setup {
     -- One of "all", "maintained" (parsers with maintainers), or a list of languages
 ensure_installed = {
@@ -269,11 +301,14 @@ ensure_installed = {
     "cpp",
     "vim",
     "haskell",
+    "go",
     "lua",
     "elm",
     "scala",
     "zig",
-    "racket"
+    "racket",
+    "elixir",
+    "pony"
 },
 
 -- Install languages synchronously (only applied to `ensure_installed`)
@@ -296,4 +331,6 @@ highlight = {
     }
 }
 require("nvim-surround").setup({})
+
+
 EOF
