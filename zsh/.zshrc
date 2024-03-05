@@ -75,7 +75,7 @@ setopt HISTfindnodups
 
 alias gs='git status'
 alias gu='git pull'
-alias ta='tmux a -t'
+alias ta='nocorrect tmux a -t'
 alias n='nvim'
 
 PKG_DEB="sudo apt update && sudo apt install "

@@ -28,11 +28,13 @@ Plug 'bakpakin/janet.vim'
 "  Plug 'vim-airline/vim-airline-themes'
 "  Plug 'vim-airline/vim-airline'
 "  Plug 'kyazdani42/nvim-web-devicons'
-
+Plug 'takac/vim-hardtime'
+Plug 'sakhnik/nvim-gdb'
 Plug 'tpope/vim-fugitive'
 "Plug 'tpope/vim-surround'
 Plug 'kylechui/nvim-surround'
 Plug 'neovim/nvim-lspconfig'
+"todo Plug 'mrcjkb/rustaceanvim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
@@ -41,6 +43,7 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'SirVer/ultisnips'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'reconquest/vim-pythonx'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'nvim-lua/lsp-status.nvim'
 "Plug 'unisonweb/unison', { 'branch': 'trunk', 'rtp': 'editor-support/vim' }
@@ -54,10 +57,15 @@ call plug#end()
 
 let mapleader = " "
 
-"syntax on
+" hardtime config
+let g:hardtime_default_on = 1
+let g:hardtime_maxcount = 3
+let g:hardtime_motion_with_count_resets = 1
+let g:hardtime_timeout = 2000
 
 colorscheme dracula
 
+" syntax on
 "set mouse=a
 "set splitright
 "set splitbelow
@@ -114,6 +122,7 @@ let g:startify_custom_header = ''
 let g:startify_session_persistence = 1
 
 let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsSnippetDirectories=["UltiSnips", "mysnips"]
 
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -129,9 +138,12 @@ nnoremap <Leader>R :w<CR>:source %<CR>
 nnoremap <Leader>s :w<CR>
 nnoremap <Leader>w :qa<CR>
 nnoremap <Leader>v :vs 
-nnoremap <Leader>t <C-w>v:term<CR>
+"nnoremap <Leader>t <C-w>v:term<CR>
+nnoremap <Leader>tw :set invwrap<CR>
+nnoremap <Leader>tp :set invpaste<CR>
+nnoremap <Leader>th :set invhlsearch<CR>
 nnoremap <Leader>o :Startify<CR>
-nnoremap <Leader>e :e<CR>
+"nnoremap <Leader>e :e<CR>
 nnoremap <Leader>l iλ
 
 
@@ -197,12 +209,15 @@ local rust_opts = {
 require('nvim-autopairs').setup{}
 require('rust-tools').setup{rust_opts}
 
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+--require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
 lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-l hls.log", "-j 1"}}
 lspconfig.pyright.setup {}
 lspconfig.elmls.setup {}
-lspconfig.zls.setup {cmd = {"zls", "--enable-debug-log"}}
+lspconfig.julials.setup {} 
+lspconfig.zls.setup {capabilities = capabilities}
 --lspconfig.unison.setup{filetypes = {"unison", "u"}}
 lspconfig.gopls.setup{cmd = {"/home/kz/go/bin/gopls"}}
 lspconfig.elixirls.setup{cmd = {"/home/kz/programming/elixir/bin/lsp/language_server.sh"}}
@@ -213,15 +228,17 @@ lspconfig.racket_langserver.setup{}
 
 
 local opts = { noremap=true }
-vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.diagnostic.open_float()<CR>', opts)
-vim.api.nvim_set_keymap('n', '<Leader>d', ':lua vim.lsp.buf.hover()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<Leader>nd', ':lua vim.diagnostic.goto_next()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<Leader>pd', ':lua vim.diagnostic.goto_prev()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<Leader>e', ':lua vim.diagnostic.open_float()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.lsp.buf.hover()<CR>', opts)
+vim.api.nvim_set_keymap('n', 'gD', ':lua vim.lsp.buf.definition()<CR>', opts)
 
-vim.filetype.add({extension = {
-    pony = 'pony'
-    }})
+-- vim.filetype.add({extension = { pony = 'pony' }})
 
 
 local cmp = require'cmp'
+local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
 
 cmp.setup({
         snippet = {
@@ -240,20 +257,20 @@ cmp.setup({
                         c = cmp.mapping.close(),
                 }),
                 ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items. 
-                ["<Tab>"] = function(fallback)
-                        if cmp.visible() then
-                                cmp.select_next_item()
-                        else
-                                fallback()
-                        end
-                end,
-                ["<S-Tab>"] = function(fallback)
-                        if cmp.visible() then
-                                cmp.select_prev_item()
-                        else
-                                fallback()
-                        end
-                end,
+				["<Tab>"] = cmp.mapping(
+					function(fallback)
+					cmp_ultisnips_mappings.jump_forwards(fallback)
+					end,
+					{ "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
+				),
+				["<S-Tab>"] = cmp.mapping(
+					function(fallback)
+					cmp_ultisnips_mappings.jump_backwards(fallback)
+					end,
+					{ "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
+				),
+                --["<Tab>"] = function(fallback) if cmp.visible() then cmp.select_next_item() else fallback() end end,
+                --["<S-Tab>"] = function(fallback) if cmp.visible() then cmp.select_prev_item() else fallback() end end,
         },
         sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
@@ -261,10 +278,13 @@ cmp.setup({
                 { name = 'buffer' }
         })
 })
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+'confirm_done',
+cmp_autopairs.on_confirm_done()
+)
 
 --cmp.setup.cmdline(':', { sources = cmp.config.sources({ {name = 'path'}, {name = 'cmdline'} }) })
-local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
---require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
 
 
 
@@ -280,8 +300,8 @@ parser_config.pony = {
         branch = "main", -- default branch in case of git repo if different from master
         generate_requires_npm = false, -- if stand-alone parser without npm dependencies
         requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
-    },
-    filetype = "pony", -- if filetype does not match the parser name
+        },
+        filetype = "pony", -- if filetype does not match the parser name
 }
 
 --require("vim.treesitter.query").set("pony", "injections", "(method name: (identifier) @function)")
@@ -290,45 +310,50 @@ parser_config.pony = {
 --require'nvim-treesitter.install'.compilers = {"zig c++"}
 require'nvim-treesitter.configs'.setup {
     -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-ensure_installed = {
-    "c",
-    "python",
-    "rust",
-    "javascript",
-    "json",
-    "html",
-    "java",
-    "cpp",
-    "vim",
-    "haskell",
-    "go",
-    "lua",
-    "elm",
-    "scala",
-    "zig",
-    "racket",
-    "elixir",
-    "pony"
-},
-
--- Install languages synchronously (only applied to `ensure_installed`)
-sync_install = false,
-
-indent = {
-    enable = true,
-    disable = {}
+    ensure_installed = {
+        "c",
+        "python",
+        "rust",
+        "javascript",
+        "json",
+        "julia",
+        "html",
+        "java",
+        "cpp",
+        "vim",
+        "haskell",
+        "go",
+        "lua",
+        "elm",
+        "scala",
+        "zig",
+        "racket",
+        "elixir",
+        "svelte",
+        --"pony",
+        "vimdoc"
     },
 
-highlight = {
-    enable = true,
-    disable = {},
+    -- Install languages synchronously (only applied to `ensure_installed`)
+    sync_install = false,
 
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
+    indent = {
+        enable = true,
+        disable = {}
+    },
+
+    highlight = {
+        enable = true,
+        textobjects = {enable = true},
+        disable = {},
+
+        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+        -- Using this option may slow down your editor, and you may see some duplicate highlights.
+        -- Instead of true it can also be a list of languages
+        additional_vim_regex_highlighting = false,
     }
+
 }
 require("nvim-surround").setup({})
 
