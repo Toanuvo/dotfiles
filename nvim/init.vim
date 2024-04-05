@@ -213,6 +213,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
 local lspconfig = require'lspconfig'
 lspconfig.ccls.setup {}
+lspconfig.html.setup {capabilities = capabilities}
 lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-l hls.log", "-j 1"}}
 lspconfig.pyright.setup {}
 lspconfig.elmls.setup {}
@@ -223,6 +224,8 @@ lspconfig.gopls.setup{cmd = {"/home/kz/go/bin/gopls"}}
 lspconfig.elixirls.setup{cmd = {"/home/kz/programming/elixir/bin/lsp/language_server.sh"}}
 --lspconfig.racket_langserver.setup{cmd = {"xvfb-run", "racket", "--lib", "racket-langserver"}}
 lspconfig.racket_langserver.setup{}
+lspconfig.gleam.setup{}
+lspconfig.tsserver.setup{capabilities = capabilities}
 
 --lspconfig.rust_analyzer.setup {}
 
@@ -232,6 +235,7 @@ vim.api.nvim_set_keymap('n', '<Leader>nd', ':lua vim.diagnostic.goto_next()<CR>'
 vim.api.nvim_set_keymap('n', '<Leader>pd', ':lua vim.diagnostic.goto_prev()<CR>', opts)
 vim.api.nvim_set_keymap('n', '<Leader>e', ':lua vim.diagnostic.open_float()<CR>', opts)
 vim.api.nvim_set_keymap('n', '<Leader>h', ':lua vim.lsp.buf.hover()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<Leader>u', ':lua vim.lsp.buf.references()<CR>', opts)
 vim.api.nvim_set_keymap('n', 'gD', ':lua vim.lsp.buf.definition()<CR>', opts)
 
 -- vim.filetype.add({extension = { pony = 'pony' }})
@@ -269,8 +273,8 @@ cmp.setup({
 					end,
 					{ "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
 				),
-                --["<Tab>"] = function(fallback) if cmp.visible() then cmp.select_next_item() else fallback() end end,
-                --["<S-Tab>"] = function(fallback) if cmp.visible() then cmp.select_prev_item() else fallback() end end,
+                ["<down>"] = function(fallback) if cmp.visible() then cmp.select_next_item() else fallback() end end,
+                ["<up>"] = function(fallback) if cmp.visible() then cmp.select_prev_item() else fallback() end end,
         },
         sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
@@ -318,6 +322,7 @@ require'nvim-treesitter.configs'.setup {
         "json",
         "julia",
         "html",
+        "gleam",
         "java",
         "cpp",
         "vim",
@@ -330,6 +335,7 @@ require'nvim-treesitter.configs'.setup {
         "racket",
         "elixir",
         "svelte",
+        "typescript",
         --"pony",
         "vimdoc"
     },
