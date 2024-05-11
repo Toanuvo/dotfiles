@@ -76,6 +76,7 @@ setopt HISTfindnodups
 
 alias gs='git status'
 alias gu='git pull'
+alias gl='git clone'
 alias ta='nocorrect tmux a -t'
 alias n='nvim'
 alias q='rlwrap q'
