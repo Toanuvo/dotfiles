@@ -1,5 +1,4 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -35,7 +34,7 @@ ZSH_THEME="robbyrussell"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -55,11 +54,14 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
+export PATH="$PATH:/home/kz/bin"
+export PATH="$PATH:/usr/local/bin"
 export PATH="$PATH:/home/kz/.local/bin"
 export PATH="$PATH:/home/kz/.cargo/bin"
 export PATH="$PATH:/home/kz/.local/share/coursier/bin"
-export PATH=$PATH:/usr/local/go/bin
+export PATH="$PATH:/usr/local/go/bin"
 export EDITOR='nvim'
+
 export ZIG_PREFIX='/home/kz/programming/zig'
 
 # You may need to manually set your language environment
@@ -69,6 +71,7 @@ export LC_ALL=en_US.UTF-8
 #PROMPT=%(?:%{%}➜ :%{%}➜ ) %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
 NEWLINE=$'\n'
 export PROMPT='%@ %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info) ${NEWLINE}%K{#ff0000} %k '
+#export PROMPT='%@ %{$fg[cyan]%}%~%{$reset_color%} ${NEWLINE}%K{#ff0000} %k '
 
 setopt HIST_IGNORE_DUPS
 setopt HISTfindnodups
