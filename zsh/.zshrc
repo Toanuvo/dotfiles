@@ -1,5 +1,3 @@
-# If you come from bash you might have to change your $PATH.
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export CC=gcc
@@ -52,7 +50,9 @@ plugins=(git zsh-autosuggestions docker docker-compose)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+export QHOME="$HOME/programming/q/q"
 
+# If you come from bash you might have to change your $PATH.
 # export MANPATH="/usr/local/man:$MANPATH"
 export PATH="$PATH:/home/kz/bin"
 export PATH="$PATH:/usr/local/bin"
@@ -78,8 +78,10 @@ setopt HISTfindnodups
 
 alias gs='git status'
 alias gu='git pull'
+alias gl='git clone'
 alias ta='nocorrect tmux a -t'
 alias n='nvim'
+alias q='rlwrap q'
 
 PKG_DEB="sudo apt update && sudo apt install "
 PKG_ARCH="sudo pacman -Sy "
