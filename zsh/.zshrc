@@ -32,7 +32,7 @@ ZSH_THEME="robbyrussell"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -54,13 +54,14 @@ export QHOME="$HOME/programming/q/q"
 
 # If you come from bash you might have to change your $PATH.
 # export MANPATH="/usr/local/man:$MANPATH"
-export PATH="$PATH:$HOME/bin"
+export PATH="$PATH:/home/kz/bin"
 export PATH="$PATH:/usr/local/bin"
-export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:$HOME/.cargo/bin"
-export PATH="$PATH:$HOME/.local/share/coursier/bin"
-export PATH=$PATH:/usr/local/go/bin
+export PATH="$PATH:/home/kz/.local/bin"
+export PATH="$PATH:/home/kz/.cargo/bin"
+export PATH="$PATH:/home/kz/.local/share/coursier/bin"
+export PATH="$PATH:/usr/local/go/bin"
 export EDITOR='nvim'
+
 export ZIG_PREFIX='/home/kz/programming/zig'
 
 # You may need to manually set your language environment
@@ -70,6 +71,7 @@ export LC_ALL=en_US.UTF-8
 #PROMPT=%(?:%{%}➜ :%{%}➜ ) %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
 NEWLINE=$'\n'
 export PROMPT='%@ %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info) ${NEWLINE}%K{#ff0000} %k '
+#export PROMPT='%@ %{$fg[cyan]%}%~%{$reset_color%} ${NEWLINE}%K{#ff0000} %k '
 
 
 
