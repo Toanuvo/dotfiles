@@ -215,6 +215,9 @@ require('rust-tools').setup{rust_opts}
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
 local lspconfig = require'lspconfig'
+lspconfig.ols.setup{
+    root_dir = lspconfig.util.root_pattern("ols.json"),
+}
 lspconfig.ccls.setup {}
 lspconfig.html.setup {capabilities = capabilities}
 lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-l hls.log", "-j 1"}}
@@ -229,6 +232,7 @@ lspconfig.elixirls.setup{cmd = {"/home/kz/programming/elixir/bin/lsp/language_se
 lspconfig.racket_langserver.setup{}
 lspconfig.gleam.setup{}
 lspconfig.tsserver.setup{capabilities = capabilities}
+lspconfig.glsl_analyzer.setup{}
 
 --lspconfig.rust_analyzer.setup {}
 
@@ -354,7 +358,9 @@ require'nvim-treesitter.configs'.setup {
         "elixir",
         "svelte",
         "typescript",
-        "vimdoc"
+        "vimdoc",
+        "glsl",
+        "odin"
     },
 
     -- Install languages synchronously (only applied to `ensure_installed`)
