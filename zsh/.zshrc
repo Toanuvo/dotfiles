@@ -73,8 +73,12 @@ NEWLINE=$'\n'
 export PROMPT='%@ %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info) ${NEWLINE}%K{#ff0000} %k '
 #export PROMPT='%@ %{$fg[cyan]%}%~%{$reset_color%} ${NEWLINE}%K{#ff0000} %k '
 
+
+
 setopt HIST_IGNORE_DUPS
 setopt HISTfindnodups
+
+alias gpi='git config --global --add oh-my-zsh.hide-info'
 
 alias gs='git status'
 alias gu='git pull'
