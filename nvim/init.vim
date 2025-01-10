@@ -14,8 +14,8 @@ require('init')
 END
 
 call plug#begin(plugpath)
-Plug 'dracula/vim'
 Plug 'ryanoasis/vim-devicons'
+Plug 'dracula/vim' , {'as': 'dracula'}
 Plug 'preservim/nerdcommenter'
 Plug 'mhinz/vim-startify'
 Plug 'windwp/nvim-autopairs'
@@ -34,8 +34,8 @@ Plug 'tpope/vim-fugitive'
 "Plug 'tpope/vim-surround'
 Plug 'kylechui/nvim-surround'
 Plug 'neovim/nvim-lspconfig'
-"todo Plug 'mrcjkb/rustaceanvim'
-Plug 'simrat39/rust-tools.nvim'
+Plug 'mrcjkb/rustaceanvim'
+"Plug 'simrat39/rust-tools.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -68,7 +68,7 @@ let g:hardtime_timeout = 2000
 
 colorscheme dracula
 
-" syntax on
+"syntax on
 "set mouse=a
 "set splitright
 "set splitbelow
@@ -135,7 +135,7 @@ nnoremap <C-c> :cd %:p:h<CR>
 nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
 nnoremap <C-f> <C-f>zz
-nnoremap <C-b> <C-b>zz
+"nnoremap <C-b> <C-b>zz
 
 nnoremap <Leader>R :w<CR>:source %<CR>
 nnoremap <Leader>s :w<CR>
@@ -210,7 +210,7 @@ local rust_opts = {
     }
 
 require('nvim-autopairs').setup{}
-require('rust-tools').setup{rust_opts}
+--require('rust-tools').setup{rust_opts}
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
@@ -230,7 +230,23 @@ lspconfig.racket_langserver.setup{}
 lspconfig.gleam.setup{}
 lspconfig.tsserver.setup{capabilities = capabilities}
 
---lspconfig.rust_analyzer.setup {}
+vim.g.rustaceanvim = {
+    server = {
+        on_attach = function(client, bufnr) 
+			if client.server_capabilities.inlayHintProvider then
+				vim.g.inlay_hints_visible = true
+				vim.lsp.inlay_hint.enable(true)
+			else
+				print("no inlay hints available")
+			end
+            end,
+        settings = {
+            ['rust-analyzer'] = {
+                capabilities = capabilities
+                }
+            }
+        }
+    }
 
 
 local opts = { noremap=true }
@@ -263,14 +279,18 @@ else vim.cmd("norm! ,") end end,
 -- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
 -- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
 
+
+local get_root_dir = function() return vim.lsp.get_clients({bufnr=vim.api.nvim_get_current_buf()})[1].root_dir  end
+
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fc', builtin.find_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
 vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, {})
-vim.keymap.set('n', '<leader>zs', function() builtin.find_files({ cwd = '~/programming/zig/zig-linux/lib' }) end, {})
+vim.keymap.set('n', '<leader>zf', function() builtin.find_files( { cwd = io.popen("zig env | jq -r '.std_dir'"):read("l")}) end, {})
+vim.keymap.set('n', '<leader>ff', function() builtin.find_files( { cwd = get_root_dir()}) end, {})
 
 local cmp = require'cmp'
 local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
