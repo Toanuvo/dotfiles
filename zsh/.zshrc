@@ -133,3 +133,6 @@ zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' '+r:|[._-]=* r:|
 
 [ -f "/home/kz/.ghcup/env" ] && source "/home/kz/.ghcup/env" # ghcup-env
 eval "$(zoxide init zsh)"
+eval "$(tv init zsh)"
+. "$HOME/.cargo/env"
+
