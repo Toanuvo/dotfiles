@@ -227,11 +227,11 @@ lspconfig.julials.setup {}
 lspconfig.zls.setup {capabilities = capabilities}
 --lspconfig.unison.setup{filetypes = {"unison", "u"}}
 lspconfig.gopls.setup{cmd = {"/home/kz/go/bin/gopls"}}
-lspconfig.elixirls.setup{cmd = {"/home/kz/programming/elixir/bin/lsp/language_server.sh"}}
+lspconfig.elixirls.setup{cmd = {"elixirls"}}
 --lspconfig.racket_langserver.setup{cmd = {"xvfb-run", "racket", "--lib", "racket-langserver"}}
 lspconfig.racket_langserver.setup{}
 lspconfig.gleam.setup{}
-lspconfig.tsserver.setup{capabilities = capabilities}
+lspconfig.ts_ls.setup{capabilities = capabilities}
 lspconfig.glsl_analyzer.setup{}
 
 vim.g.rustaceanvim = {
@@ -405,6 +405,7 @@ require'nvim-treesitter.configs'.setup {
 
 }
 
+--[[
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 parser_config.zig = {
   install_info = {
@@ -418,7 +419,7 @@ parser_config.zig = {
     requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
   },
 }
-
+--]]
 
 require("nvim-surround").setup({})
 
