@@ -48,6 +48,10 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(git zsh-autosuggestions docker docker-compose)
 
 source $ZSH/oh-my-zsh.sh
+# append completions to fpath
+fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+# # initialise completions with ZSH's compinit
+autoload -Uz compinit && compinit
 
 # User configuration
 export QHOME="$HOME/programming/q/q"
@@ -60,6 +64,8 @@ export PATH="$PATH:/home/kz/.local/bin"
 export PATH="$PATH:/home/kz/.cargo/bin"
 export PATH="$PATH:/home/kz/.local/share/coursier/bin"
 export PATH="$PATH:/usr/local/go/bin"
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
 export EDITOR='nvim'
 
 export ZIG_PREFIX='/home/kz/programming/zig'
