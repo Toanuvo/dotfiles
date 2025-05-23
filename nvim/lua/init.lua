@@ -14,7 +14,7 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 0
 
 vim.opt.clipboard = 'unnamedplus'
-vim.opt.guifont = 'RobotoMono NF:h13'
+vim.opt.guifont = 'RobotoMono:h16'
 
 
 
