@@ -3,12 +3,36 @@ export ZSH="$HOME/.oh-my-zsh"
 export CC=gcc
 
 ZSH_THEME="robbyrussell"
-
+hue_to_rgb() {
+    local p=$1 q=$2 t=$3
+    
+    # Handle t < 0
+    if [ $(echo "$t < 0" | bc) -eq 1 ]; then
+        t=$(echo "$t + 1" | bc)
+    fi
+    
+    # Handle t > 1
+    if [ $(echo "$t > 1" | bc) -eq 1 ]; then
+        t=$(echo "$t - 1" | bc)
+    fi
+    
+    # Apply the hue to RGB conversion logic
+    if [ $(echo "$t < 0.166666667" | bc) -eq 1 ]; then
+        echo "scale=6; $p + ($q - $p) * 6 * $t" | bc
+    elif [ $(echo "$t < 0.5" | bc) -eq 1 ]; then
+        echo "$q"
+    elif [ $(echo "$t < 0.666666667" | bc) -eq 1 ]; then
+        echo "scale=6; $p + ($q - $p) * (0.666666667 - $t) * 6" | bc
+    else
+        echo "$p"
+    fi
+}
 generate_terminal_color() {
     # Get user and hostname for unique identification
     local user=$(whoami)
-    local hostname=$(hostname -s)
-    local identifier="${user}@${hostname}"
+    local hostname=$(cat /etc/hostname)
+    local mac=$(ip link show 2>/dev/null | awk '/ether/ {print $2}' | head -1)
+    local identifier="${user}${hostname}${mac}"
     
     # Create a hash from the identifier
     local hash=$(echo -n "$identifier" | shasum -a 256 | cut -c1-6)
@@ -19,37 +43,45 @@ generate_terminal_color() {
     local l_hex=${hash:8:4}
     
     # Convert to HSL values
-    h=$((16#$h_hex % 360))          # Hue: 0-359
-    s=$((60 + (16#$s_hex % 40)))    # Saturation: 60-99% (vibrant colors)
-    l=$((40 + (16#$l_hex % 35)))    # Lightness: 40-74% (readable range)
+    echo "hash $hash"
+    h=$((16#$hash % 360))          # Hue: 0-359
+    s=$((60 + (16#$hash % 40)))    # Saturation: 60-99% (vibrant colors)
+    l=$((40 + (16#$hash % 35)))    # Lightness: 40-74% (readable range)
        # Normalize values
-    h=$((h % 360))
-    s=$(echo "scale=2; $s / 100" | bc)
-    l=$(echo "scale=2; $l / 100" | bc)
-    
-    local c=$(echo "scale=2; (1 - sqrt(($l * 2 - 1)^2)) * $s" | bc -l)
-    local x=$(echo "scale=2; $c * (1 - sqrt(((($h / 60) % 2) - 1)^2))" | bc -l)
-    local m=$(echo "scale=2; $l - $c / 2" | bc)
-    
-    if [ $h -lt 60 ]; then
-        r=$c; g=$x; b=0
-    elif [ $h -lt 120 ]; then
-        r=$x; g=$c; b=0
-    elif [ $h -lt 180 ]; then
-        r=0; g=$c; b=$x
-    elif [ $h -lt 240 ]; then
-        r=0; g=$x; b=$c
-    elif [ $h -lt 300 ]; then
-        r=$x; g=0; b=$c
+    h=$(echo "scale=6; $h / 360" | bc)
+    s=$(echo "scale=6; $s / 100" | bc)
+    l=$(echo "scale=6; $l / 100" | bc)
+    echo "hsl: RGB(${h}, ${s}, ${l})"
+
+        local r g b
+      # Check if achromatic (s == 0)
+    if [ $(echo "$s == 0" | bc) -eq 1 ]; then
+        # Achromatic case - all components equal to lightness
+        r=$l
+        g=$l
+        b=$l
     else
-        r=$c; g=0; b=$x
+        # Chromatic case
+        local q
+        if [ $(echo "$l < 0.5" | bc) -eq 1 ]; then
+            q=$(echo "scale=6; $l * (1 + $s)" | bc)
+        else
+            q=$(echo "scale=6; $l + $s - $l * $s" | bc)
+        fi
+        
+        local p=$(echo "scale=6; 2 * $l - $q" | bc)
+        
+        # Calculate RGB components
+        r=$(hue_to_rgb $p $q $(echo "scale=6; $h + 0.333333333" | bc))
+        g=$(hue_to_rgb $p $q $h)
+        b=$(hue_to_rgb $p $q $(echo "scale=6; $h - 0.333333333" | bc))
     fi
     
-    # Convert to 0-255 range
-    r=$(echo "scale=0; ($r + $m) * 255" | bc)
-    g=$(echo "scale=0; ($g + $m) * 255" | bc)
-    b=$(echo "scale=0; ($b + $m) * 255" | bc)
-    
+    # Convert to 0-255 range and round
+    r=$(echo "scale=0; ($r * 255 + 0.5) / 1" | bc)
+    g=$(echo "scale=0; ($g * 255 + 0.5) / 1" | bc)
+    b=$(echo "scale=0; ($b * 255 + 0.5) / 1" | bc)
+     
     # Remove decimal points and ensure integers
     r=${r%.*}; g=${g%.*}; b=${b%.*}
     r=${r:-0}; g=${g:-0}; b=${b:-0} 
