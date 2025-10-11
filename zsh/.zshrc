@@ -3,105 +3,6 @@ export ZSH="$HOME/.oh-my-zsh"
 export CC=gcc
 
 ZSH_THEME="robbyrussell"
-hue_to_rgb() {
-    local p=$1 q=$2 t=$3
-    
-    # Handle t < 0
-    if [ $(echo "$t < 0" | bc) -eq 1 ]; then
-        t=$(echo "$t + 1" | bc)
-    fi
-    
-    # Handle t > 1
-    if [ $(echo "$t > 1" | bc) -eq 1 ]; then
-        t=$(echo "$t - 1" | bc)
-    fi
-    
-    # Apply the hue to RGB conversion logic
-    if [ $(echo "$t < 0.166666667" | bc) -eq 1 ]; then
-        echo "scale=6; $p + ($q - $p) * 6 * $t" | bc
-    elif [ $(echo "$t < 0.5" | bc) -eq 1 ]; then
-        echo "$q"
-    elif [ $(echo "$t < 0.666666667" | bc) -eq 1 ]; then
-        echo "scale=6; $p + ($q - $p) * (0.666666667 - $t) * 6" | bc
-    else
-        echo "$p"
-    fi
-}
-generate_terminal_color() {
-    # Get user and hostname for unique identification
-    local user=$(whoami)
-    local hostname=$(cat /etc/hostname)
-    local mac=$(ip link show 2>/dev/null | awk '/ether/ {print $2}' | head -1)
-    local identifier="${user}${hostname}${mac}"
-    
-    # Create a hash from the identifier
-    local hash=$(echo -n "$identifier" | shasum -a 256 | cut -c1-6)
-
-        # Extract values for HSL generation
-    local h_hex=${hash:0:4}
-    local s_hex=${hash:4:4}
-    local l_hex=${hash:8:4}
-    
-    # Convert to HSL values
-    echo "hash $hash"
-    h=$((16#$hash % 360))          # Hue: 0-359
-    s=$((60 + (16#$hash % 40)))    # Saturation: 60-99% (vibrant colors)
-    l=$((40 + (16#$hash % 35)))    # Lightness: 40-74% (readable range)
-       # Normalize values
-    h=$(echo "scale=6; $h / 360" | bc)
-    s=$(echo "scale=6; $s / 100" | bc)
-    l=$(echo "scale=6; $l / 100" | bc)
-    echo "hsl: RGB(${h}, ${s}, ${l})"
-
-        local r g b
-      # Check if achromatic (s == 0)
-    if [ $(echo "$s == 0" | bc) -eq 1 ]; then
-        # Achromatic case - all components equal to lightness
-        r=$l
-        g=$l
-        b=$l
-    else
-        # Chromatic case
-        local q
-        if [ $(echo "$l < 0.5" | bc) -eq 1 ]; then
-            q=$(echo "scale=6; $l * (1 + $s)" | bc)
-        else
-            q=$(echo "scale=6; $l + $s - $l * $s" | bc)
-        fi
-        
-        local p=$(echo "scale=6; 2 * $l - $q" | bc)
-        
-        # Calculate RGB components
-        r=$(hue_to_rgb $p $q $(echo "scale=6; $h + 0.333333333" | bc))
-        g=$(hue_to_rgb $p $q $h)
-        b=$(hue_to_rgb $p $q $(echo "scale=6; $h - 0.333333333" | bc))
-    fi
-    
-    # Convert to 0-255 range and round
-    r=$(echo "scale=0; ($r * 255 + 0.5) / 1" | bc)
-    g=$(echo "scale=0; ($g * 255 + 0.5) / 1" | bc)
-    b=$(echo "scale=0; ($b * 255 + 0.5) / 1" | bc)
-     
-    # Remove decimal points and ensure integers
-    r=${r%.*}; g=${g%.*}; b=${b%.*}
-    r=${r:-0}; g=${g:-0}; b=${b:-0} 
-    r=$(( r > 255 ? 255 : r ))
-    g=$(( g > 255 ? 255 : g ))
-    b=$(( b > 255 ? 255 : b ))
-    
-    # Set terminal colors using ANSI escape sequences
-    # This sets the background and text colors
-    #printf "\033]11;rgb:%02x/%02x/%02x\007" $((r/4)) $((g/4)) $((b/4))  # Background (darker)
-    #printf "\033]10;rgb:%02x/%02x/%02x\007" $r $g $b                      # Foreground (brighter)
-    
-    
-    # Also set the prompt color to match
-    export COLOR_ID=$(printf "#%02x%02x%02x" $r $g $b)
-    
-    # Optional: Display the color info
-    echo "Terminal color set for ${identifier}: RGB(${r}, ${g}, ${b})"
-}
-generate_terminal_color
 
 
 
@@ -141,12 +42,16 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
 
+#source ~/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git zsh-autosuggestions docker docker-compose)
+plugins=(git  docker docker-compose zsh-autosuggestions )
 
 source $ZSH/oh-my-zsh.sh
+source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+#
 # append completions to fpath
 fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
 # # initialise completions with ZSH's compinit
@@ -191,7 +96,9 @@ alias gu='git pull'
 alias gl='git clone'
 alias ta='nocorrect tmux a -t'
 alias n='nvim'
+alias nz='nvim ~/.zshrc'
 alias q='rlwrap q'
+
 
 PKG_DEB="sudo apt update && sudo apt install -y "
 PKG_ARCH="sudo pacman -Sy "
@@ -242,4 +149,18 @@ eval "$(zoxide init zsh)"
 eval "$(tv init zsh)"
 
 
+
+
 . "$HOME/.local/bin/env"
+
+generate_terminal_color(){
+    # Get user and hostname for unique identification
+    local user=$(whoami)
+    local hostname=$(cat /etc/hostname)
+    local mac=$(ip link show 2>/dev/null | awk '/ether/ {print $2}' | head -1)
+    local identifier="${user}${hostname}${mac}"
+    # Create a hash from the identifier
+    local seed=$(echo -n  "$identifier" | shasum -a 256 | cut -c1-8)
+    export COLOR_ID=$(randomColor "$seed")
+}
+generate_terminal_color
