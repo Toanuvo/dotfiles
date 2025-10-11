@@ -16,7 +16,6 @@ END
 call plug#begin(plugpath)
 Plug 'ryanoasis/vim-devicons'
 Plug 'dracula/vim' , {'as': 'dracula'}
-Plug 'preservim/nerdcommenter'
 Plug 'mhinz/vim-startify'
 Plug 'windwp/nvim-autopairs'
 Plug 'sbulav/nredir.nvim'
@@ -215,6 +214,7 @@ require('nvim-autopairs').setup{}
 --require('rust-tools').setup{rust_opts}
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
 --require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
 local lspconfig = require'lspconfig'
 lspconfig.ols.setup{
@@ -235,6 +235,7 @@ lspconfig.racket_langserver.setup{}
 --lspconfig.gleam.setup{}
 --lspconfig.tsserver.setup{capabilities = capabilities}
 lspconfig.glsl_analyzer.setup{}
+lspconfig.texlab.setup{}
 --lspconfig.tabby_ml.setup{}
 
 vim.g.rustaceanvim = {
