@@ -16,7 +16,6 @@ END
 call plug#begin(plugpath)
 Plug 'ryanoasis/vim-devicons'
 Plug 'dracula/vim' , {'as': 'dracula'}
-Plug 'preservim/nerdcommenter'
 Plug 'mhinz/vim-startify'
 Plug 'windwp/nvim-autopairs'
 Plug 'sbulav/nredir.nvim'
@@ -160,6 +159,7 @@ nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
 nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
 
 
+autocmd BufWritePre * lua vim.lsp.buf.format()
 autocmd BufWinEnter,WinEnter term://* startinsert
 tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
 tnoremap jk <C-\><C-n>
