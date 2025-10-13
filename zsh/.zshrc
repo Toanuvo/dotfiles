@@ -43,7 +43,6 @@ generate_terminal_color() {
     local l_hex=${hash:8:4}
     
     # Convert to HSL values
-    echo "hash $hash"
     h=$((16#$hash % 360))          # Hue: 0-359
     s=$((60 + (16#$hash % 40)))    # Saturation: 60-99% (vibrant colors)
     l=$((40 + (16#$hash % 35)))    # Lightness: 40-74% (readable range)
@@ -51,7 +50,6 @@ generate_terminal_color() {
     h=$(echo "scale=6; $h / 360" | bc)
     s=$(echo "scale=6; $s / 100" | bc)
     l=$(echo "scale=6; $l / 100" | bc)
-    echo "hsl: RGB(${h}, ${s}, ${l})"
 
         local r g b
       # Check if achromatic (s == 0)
@@ -237,3 +235,7 @@ eval "$(tv init zsh)"
 
 
 . "$HOME/.local/bin/env"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

@@ -28,7 +28,9 @@ Plug 'bakpakin/janet.vim'
 "  Plug 'vim-airline/vim-airline-themes'
 "  Plug 'vim-airline/vim-airline'
 "  Plug 'kyazdani42/nvim-web-devicons'
-Plug 'takac/vim-hardtime'
+
+Plug 'm4xshen/hardtime.nvim'
+Plug 'lervag/vimtex'
 Plug 'sakhnik/nvim-gdb'
 Plug 'tpope/vim-fugitive'
 "Plug 'tpope/vim-surround'
@@ -59,12 +61,7 @@ Plug 'nvim-treesitter/playground'
 call plug#end()
 
 let mapleader = " "
-
-" hardtime config
-let g:hardtime_default_on = 1
-let g:hardtime_maxcount = 3
-let g:hardtime_motion_with_count_resets = 1
-let g:hardtime_timeout = 2000
+let maplocalleader = "'"
 
 colorscheme dracula
 
@@ -160,6 +157,7 @@ nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
 nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
 
 
+autocmd BufWritePre * lua vim.lsp.buf.format()
 autocmd BufWinEnter,WinEnter term://* startinsert
 tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
 tnoremap jk <C-\><C-n>
@@ -195,6 +193,21 @@ endfunction
 
 lua <<END
 
+local commhl = vim.api.nvim_get_hl_by_name("comment", true)
+vim.api.nvim_set_hl(0, "DraculaInlayHint", { fg=commhl["foreground"],  bg=red })
+
+
+
+-- Enable inlay hints globally for all LSP servers
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client.server_capabilities.inlayHintProvider then
+      vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+    end
+  end,
+})
 local rust_opts = { 
     tools = {
         autoSetHints = true,
@@ -210,6 +223,7 @@ local rust_opts = {
     }
 
 require('nvim-autopairs').setup{}
+require('hardtime').setup{}
 --require('rust-tools').setup{rust_opts}
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -262,6 +276,7 @@ vim.api.nvim_set_keymap('n', '<Leader>u', ':lua vim.lsp.buf.references()<CR>', o
 vim.api.nvim_set_keymap('n', 'gD', ':lua vim.lsp.buf.definition()<CR>', opts)
 
 
+vim.g.vimtex_view_method  = 'zathura'
 
 vim.g.text_object_repeat = false
 vim.keymap.set('n', '<leader>tf', function() vim.g.text_object_repeat = not vim.g.text_object_repeat end)
@@ -284,7 +299,14 @@ else vim.cmd("norm! ,") end end,
 -- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
 
 
-local get_root_dir = function() return vim.lsp.get_clients({bufnr=vim.api.nvim_get_current_buf()})[1].root_dir  end
+local get_root_dir = function() 
+    local client = vim.lsp.get_clients({bufnr=vim.api.nvim_get_current_buf()})[1]
+    if(client == nil) then 
+        return vim.loop.cwd() 
+    else
+        return client.root_dir
+    end
+end
 
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>fc', builtin.find_files, {})
