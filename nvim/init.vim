@@ -16,12 +16,11 @@ END
 call plug#begin(plugpath)
 Plug 'ryanoasis/vim-devicons'
 Plug 'dracula/vim' , {'as': 'dracula'}
-Plug 'preservim/nerdcommenter'
 Plug 'mhinz/vim-startify'
 Plug 'windwp/nvim-autopairs'
 Plug 'sbulav/nredir.nvim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'bakpakin/janet.vim'
+"Plug 'bakpakin/janet.vim'
 " Plug 'roxma/nvim-yarp'
 " Plug 'roxma/vim-hug-neovim-rpc'
 "  Plug 'scrooloose/nerdtree'
@@ -49,6 +48,7 @@ Plug 'reconquest/vim-pythonx'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'nvim-lua/plenary.nvim'
+"Plug 'tabbyml/vim-tabby'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.6' }
 "Plug 'unisonweb/unison', { 'branch': 'trunk', 'rtp': 'editor-support/vim' }
 
@@ -57,6 +57,7 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'nvim-treesitter/playground'
+
 "  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 call plug#end()
 
@@ -156,7 +157,6 @@ nnoremap gb :ls<CR>:b<Space>
 nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
 nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
 
-
 autocmd BufWritePre * lua vim.lsp.buf.format()
 autocmd BufWinEnter,WinEnter term://* startinsert
 tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
@@ -227,6 +227,7 @@ require('hardtime').setup{}
 --require('rust-tools').setup{rust_opts}
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
 --require('lspconfig')['rust-analyzer'].setup {capabilities = capabilities}
 local lspconfig = require'lspconfig'
 lspconfig.ols.setup{
@@ -244,9 +245,11 @@ lspconfig.gopls.setup{cmd = {"/home/kz/go/bin/gopls"}}
 lspconfig.elixirls.setup{cmd = {"elixirls"}}
 --lspconfig.racket_langserver.setup{cmd = {"xvfb-run", "racket", "--lib", "racket-langserver"}}
 lspconfig.racket_langserver.setup{}
-lspconfig.gleam.setup{}
-lspconfig.ts_ls.setup{capabilities = capabilities}
+--lspconfig.gleam.setup{}
+--lspconfig.tsserver.setup{capabilities = capabilities}
 lspconfig.glsl_analyzer.setup{}
+lspconfig.texlab.setup{}
+--lspconfig.tabby_ml.setup{}
 
 vim.g.rustaceanvim = {
     server = {
