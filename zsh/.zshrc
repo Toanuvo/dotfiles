@@ -4,8 +4,6 @@ export CC=gcc
 
 ZSH_THEME="robbyrussell"
 
-
-
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
 # HYPHEN_INSENSITIVE="true"
@@ -153,6 +151,9 @@ eval "$(tv init zsh)"
 
 . "$HOME/.local/bin/env"
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 generate_terminal_color(){
     # Get user and hostname for unique identification
     local user=$(whoami)
