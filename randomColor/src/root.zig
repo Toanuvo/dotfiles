@@ -9,29 +9,11 @@ pub export fn add(a: i32, b: i32) i32 {
     return a + b;
 }
 
-test "basic add functionality" {
-    try testing.expect(add(3, 7) == 10);
-}
-
-// random_color.zig
-// Zig 0.11+
-//
-// Core features ported from the uploaded randomColor.js:
-// - options: hue (name | number | hex), luminosity ("bright","light","dark"), format ("hex","rgb","rgba")
-// - seed: repeatable results
-// - count: generate many
-// - color bounds table and HSV→RGB/HEX
-//
-// Usage example:
-// const out = try randomColor(.{ .format = .hex }, gpa);
-// defer gpa.free(out);
-// std.debug.print("{s}\n", .{out});
-
 pub const Format = enum { hex, rgb, rgba };
 
 pub const Options = struct {
-    hue: Hue = .{ .name = .red },
-    luminosity: Luminosity = .random,
+    hue: Hue = .any,
+    luminosity: Luminosity = .bright,
     format: Format = .hex,
     alpha: ?f32 = null, // 0..1 if format == rgba
     seed: ?i64 = null, // set for repeatable
@@ -41,6 +23,7 @@ pub const Options = struct {
 
 pub const Luminosity = enum { random, bright, light, dark };
 pub const Hue = union(enum) {
+    any,
     name: ColorName,
     degrees: i32, // 0..360
     hex: []const u8, // "#RRGGBB" or "#RGB"
@@ -130,14 +113,9 @@ fn randomWithin(range: [2]i32, rng: Rng) i32 {
 
 fn getHueRange(h: Hue) ![2]i32 {
     return switch (h) {
-        .degrees => |deg| if (0 < deg and deg < 360)
-            .{ deg, deg }
-        else
-            .{ 0, 360 },
-        .name => |n| if (Colors.get(n).hueRange) |hr|
-            hr
-        else
-            .{ 0, 360 },
+        .any => .{ 0, 360 },
+        .degrees => |deg| if (0 < deg and deg < 360) .{ deg, deg } else .{ 0, 360 },
+        .name => |n| if (Colors.get(n).hueRange) |hr| hr else .{ 0, 360 },
         .hex => |hexstr| b: {
             const hsv = hexToHSB(hexstr) catch return .{ 0, 360 };
             break :b (try getColorInfo(hsv[0])).hueRange orelse .{ 0, 360 };
