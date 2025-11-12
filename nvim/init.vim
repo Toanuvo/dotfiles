@@ -195,6 +195,12 @@ function! Scratch()
 endfunction
 
 lua <<END
+vim.api.nvim_create_autocmd("BufWritePost", {
+    pattern = { "*.typ", "*.typst" },
+    callback = function()
+        vim.fn.jobstart({ "typst", "compile", vim.api.nvim_buf_get_name(0) })
+    end
+    })
 
 local rust_opts = { 
     tools = {
@@ -220,6 +226,7 @@ local lspconfig = require'lspconfig'
 lspconfig.ols.setup{
     root_dir = lspconfig.util.root_pattern("ols.json"),
 }
+lspconfig.tinymist.setup {}
 lspconfig.ccls.setup {}
 lspconfig.html.setup {capabilities = capabilities}
 lspconfig.hls.setup {cmd = {"haskell-language-server-wrapper", "--lsp", "-l hls.log", "-j 1"}}
@@ -384,6 +391,7 @@ require'nvim-treesitter.configs'.setup {
         "typescript",
         "vimdoc",
         "glsl",
+        "typst",
         "odin"
     },
 
