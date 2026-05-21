@@ -33,7 +33,9 @@ map("n", "j", function()
     return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "j"
 end, { expr = true })
 
-map("t", "<C-R>", "<C-\\><C-N>\"" .. vim.fn.nr2char(vim.fn.getchar()) .. "pi", { expr = true })
+map("t", "<C-R>", function()
+  return '<C-\\><C-N>"' .. vim.fn.nr2char(vim.fn.getchar()) .. "pi"
+end, { expr = true })
 map("t", "jk", "<C-\\><C-n>")
 map("t", "<C-h>", "<C-\\><C-n><C-w>h")
 map("t", "<C-j>", "<C-\\><C-n><C-w>j")

@@ -145,11 +145,15 @@ local ensureInstalled = {
     "scala", "zig", "racket", "elixir", "svelte",
     "typescript", "vimdoc", "glsl", "typst", "odin",
 }
-local alreadyInstalled = require('nvim-treesitter').get_installed()
-local parsersToInstall = vim.iter(ensureInstalled)
-    :filter(function(parser)
-        return not vim.tbl_contains(alreadyInstalled, parser)
-    end)
-    :totable()
-require('nvim-treesitter').install(parsersToInstall)
-    :wait(300000)
+vim.api.nvim_create_user_command("TSInstallMissing", function()
+    local alreadyInstalled = require('nvim-treesitter').get_installed()
+    local parsersToInstall = vim.iter(ensureInstalled)
+        :filter(function(parser)
+            return not vim.tbl_contains(alreadyInstalled, parser)
+        end)
+        :totable()
+
+    if #parsersToInstall > 0 then
+        require('nvim-treesitter').install(parsersToInstall)
+    end
+end, {})
