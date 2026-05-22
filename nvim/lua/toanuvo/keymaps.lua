@@ -11,7 +11,10 @@ map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-f>", "<C-f>zz")
 -- map("n", "<C-b>", "<C-b>zz")
 
-map("n", "<Leader>R", ":w<CR>:source %<CR>")
+map("n", "<Leader>R", function()
+    vim.cmd.source(vim.env.MYVIMRC)
+    vim.notify("Sourced " .. vim.env.MYVIMRC)
+end)
 map("n", "<Leader>s", ":w<CR>")
 map("n", "<Leader>w", ":qa<CR>")
 map("n", "<Leader>v", ":vs ")
@@ -34,7 +37,7 @@ map("n", "j", function()
 end, { expr = true })
 
 map("t", "<C-R>", function()
-  return '<C-\\><C-N>"' .. vim.fn.nr2char(vim.fn.getchar()) .. "pi"
+    return '<C-\\><C-N>"' .. vim.fn.nr2char(vim.fn.getchar()) .. "pi"
 end, { expr = true })
 map("t", "jk", "<C-\\><C-n>")
 map("t", "<C-h>", "<C-\\><C-n><C-w>h")

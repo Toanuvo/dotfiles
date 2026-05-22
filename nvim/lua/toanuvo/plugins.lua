@@ -3,7 +3,7 @@ local plugpath = vim.fn.expand("~/.config/nvim/plugged")
 -- todo vim.pack
 vim.cmd("call plug#begin('" .. plugpath .. "')")
 vim.cmd([[
-  "Plug 'ryanoasis/vim-devicons'
+  Plug 'ryanoasis/vim-devicons'
   "Plug 'sbulav/nredir.nvim'
   "Plug 'lervag/vimtex'
 

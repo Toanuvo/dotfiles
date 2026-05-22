@@ -9,9 +9,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
-local commhl = vim.api.nvim_get_hl_by_name("comment", true)
---vim.api.nvim_set_hl(0, "DraculaInlayHint", { foreground=commhl["foreground"],  background="bg" })
-vim.api.nvim_set_hl(0, "LspInlayHint", { italic = true, fg = commhl["foreground"], bg = "bg" })
+
+-- vim.api.nvim_set_hl(0, "LspInlayHint", { fg = vim.api.nvim_get_hl(0, { name = "Comment" }).fg, bg = nil, italic = true, })
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -93,7 +92,12 @@ map('n', '<Leader>h', vim.lsp.buf.hover, opts)
 map('n', '<Leader>u', vim.lsp.buf.references, opts)
 map('n', 'gD', vim.lsp.buf.definition, opts)
 
-vim.cmd [[ autocmd BufWritePre * lua vim.lsp.buf.format() ]]
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*",
+    callback = function()
+        vim.lsp.buf.format()
+    end,
+})
 
 vim.g.rustaceanvim = {
     server = {
